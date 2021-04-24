@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ubongo", "Ubongo\Ubongo.vcxproj", "{16DBA795-D7A1-4ADD-8104-304B3017284A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{16DBA795-D7A1-4ADD-8104-304B3017284A}.Debug|x64.ActiveCfg = Debug|x64
+		{16DBA795-D7A1-4ADD-8104-304B3017284A}.Debug|x64.Build.0 = Debug|x64
+		{16DBA795-D7A1-4ADD-8104-304B3017284A}.Release|x64.ActiveCfg = Debug|x64
+		{16DBA795-D7A1-4ADD-8104-304B3017284A}.Release|x64.Build.0 = Debug|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2EFF7914-111E-4770-A808-A1A294CD646D}
+	EndGlobalSection
+EndGlobal
