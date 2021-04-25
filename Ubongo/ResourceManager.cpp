@@ -4,8 +4,11 @@
 #include <fstream>
 #include <sstream>
 
+#include "stb_image.h"
+
 // Instantiate static variables
 std::map<std::string, Shader> ResourceManager::Shaders;
+std::map<std::string, Texture2D> ResourceManager::Textures;
 
 ResourceManager::ResourceManager()
 {
@@ -22,9 +25,22 @@ Shader& ResourceManager::GetShader(std::string name)
 	return Shaders[name];
 }
 
+void ResourceManager::LoadTexture(const char* file, bool alpha, std::string name)
+{
+	Textures[name] = LoadTextureFromFile(file, alpha);
+}
+
+Texture2D& ResourceManager::GetTexture(std::string name)
+{
+	return Textures[name];
+}
+
 void ResourceManager::Clear()
 {
 	for (auto iter : Shaders)
+		glDeleteProgram(iter.second.ID);
+
+	for (auto iter : Textures)
 		glDeleteProgram(iter.second.ID);
 }
 
@@ -74,3 +90,27 @@ Shader ResourceManager::LoadShaderFromFile(const char* vShaderFile, const char* 
 	shader.Compile(vertexCode.c_str(), fragmentCode.c_str(), gShaderFile ? geometryCode.c_str() : nullptr);
 	return shader;
 }
+
+Texture2D ResourceManager::LoadTextureFromFile(const char* file, bool alpha)
+{
+	// create texture object
+	Texture2D texture;
+
+	if (alpha)
+	{
+		texture.Internal_Format = GL_RGBA;
+		texture.Image_Format = GL_RGBA;
+	}
+
+	// load image
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load(file, &width, &height, &nrChannels, 0);
+
+	// generate texture
+	texture.Generate(width, height, data);
+
+	// free image data
+	stbi_image_free(data);
+	return texture;
+}
+
