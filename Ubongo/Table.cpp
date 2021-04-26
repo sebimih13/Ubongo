@@ -34,6 +34,12 @@ TableManager::TableManager()
 	MoveablePieces[3] = 3;
 	MoveablePieces[4] = 4;
 
+	// todo : make function to set this vector
+	PieceFormat[1] = ResourceManager::PiecesFormat[MoveablePieces[1]];
+	PieceFormat[2] = ResourceManager::PiecesFormat[MoveablePieces[2]];
+	PieceFormat[3] = ResourceManager::PiecesFormat[MoveablePieces[3]];
+	PieceFormat[4] = ResourceManager::PiecesFormat[MoveablePieces[4]];
+
 	InitRenderData();
 }
 
@@ -93,9 +99,9 @@ void TableManager::InitRenderData()
 
 void TableManager::DrawPiece(int index)
 {
-	for (int i = 0; i < 3; i++)
-		for (int j = 0; j < 5; j++)
-			if (ResourceManager::PiecesFormat[index][5 * i + j] == '*')
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			if (PieceFormat[index][4 * i + j] == '*')
 				RenderSprite->DrawSprite(ResourceManager::GetTexture("square"), glm::vec2(PiecePosition[index].x + j * SquareSize, PiecePosition[index].y + i * SquareSize), Resize, ResourceManager::PiecesColor[index]);
 }
 
@@ -167,9 +173,41 @@ void TableManager::Draw()
 		DrawPiece(MoveablePieces[i]);
 }
 
-void TableManager::RotatePiece()
+void TableManager::RotatePiece(bool right)
 {
+	/*
+	
+		****		###*		####		**##
+		###*	=>	###*	=>	####	=>	*###
+		####		###*		*###		*###
+		####		##**		****		*###
 
+	*/
+
+	// todo : BUG : DrawPiece()
+
+	if (SelectedPiece != 0)
+	{
+		char aux[5][5];
+
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 4; j++)
+				aux[i][j] = PieceFormat[MoveablePieces[SelectedPiece]][4 * i + j];
+		
+		int index = 0;
+		if (right)
+		{
+			for (int j = 0; j < 4; j++)
+				for (int i = 3; i >= 0; i--)
+					PieceFormat[MoveablePieces[SelectedPiece]][index++] = aux[i][j];
+		}
+		else
+		{
+			for (int j = 3; j >= 0; j--)
+				for (int i = 0; i < 4; i++)
+					PieceFormat[MoveablePieces[SelectedPiece]][index++] = aux[i][j];
+		}
+	}
 }
 
 void TableManager::FlipPiece()
@@ -179,11 +217,11 @@ void TableManager::FlipPiece()
 
 bool TableManager::IsPieceSelected(int index)
 {
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < 4; j++)
 		{
-			if (ResourceManager::PiecesFormat[index][5 * i + j] == '*')
+			if (PieceFormat[index][4 * i + j] == '*')
 			{
 				int StartX = (int)PiecePosition[index].x + j * SquareSize;
 				int EndX = StartX + SquareSize;
@@ -227,15 +265,16 @@ void TableManager::PutInTable()
 
 	DeletePieceFromTable(MoveablePieces[SelectedPiece]);
 
+	// todo : identify which square is closer to out position X && Y
 	// check if the selected piece must be placed in table
 	glm::vec2 CorrectPosition = PiecePosition[SelectedPiece];
 	bool FirstTime = true;
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < 4; j++)
 		{
-			if (ResourceManager::PiecesFormat[MoveablePieces[SelectedPiece]][5 * i + j] == '*')
+			if (PieceFormat[MoveablePieces[SelectedPiece]][4 * i + j] == '*')
 			{
 				int StartX = (int)PiecePosition[SelectedPiece].x + j * SquareSize;
 				int EndX = StartX + SquareSize;

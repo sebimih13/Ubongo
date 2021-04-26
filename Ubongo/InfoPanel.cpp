@@ -44,9 +44,9 @@ void InfoPanel::DrawPiece(int index, glm::vec2 position)
 
 	for (int i = 0; i < 3; i++)
 	{
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < 4; j++)
 		{
-			if (ResourceManager::PiecesFormat[index][5 * i + j] == '*')
+			if (ResourceManager::PiecesFormat[index][4 * i + j] == '*')
 				RenderSprite->DrawSprite(ResourceManager::GetTexture("square"), glm::vec2(position.x + j * SquareSize, position.y), 0.1f, ResourceManager::PiecesColor[index]);
 		}
 		position.y += SquareSize;
@@ -58,7 +58,8 @@ void InfoPanel::Draw()
 	// draw panel
 	RenderSprite->DrawSprite(ResourceManager::GetTexture("panel"), glm::vec2(30.0f, 30.0f));
 
-	// draw panel's pieces
+	// draw panel's pieces	
+	// todo : make const diffx, diffy
 	float StartX = 130.0f, StartY = 65.0f;
 	float DiffX = 60.0f, DiffY = 70.0f;
 

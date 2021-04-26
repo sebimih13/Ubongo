@@ -28,6 +28,9 @@ public:
 	void SetMouseLeft(bool pressed);
 	void SetMousePos(int x, int y);
 
+	void RotatePiece(bool right);
+	void FlipPiece();
+
 private:
 	// Render data
 	GLuint LineVAO, SquareVAO;
@@ -50,12 +53,9 @@ private:
 
 	int MoveablePieces[5];
 	glm::vec2 PiecePosition[5];
+	std::string PieceFormat[5];
 
 	void DrawPiece(int index);
-
-	// todo : add functions to flip and rotate the pieces
-	void RotatePiece();
-	void FlipPiece();
 
 	void SetSelectedPiece();
 	bool IsPieceSelected(int index);

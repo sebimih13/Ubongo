@@ -131,6 +131,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	if (key == GLFW_KEY_E && action == GLFW_PRESS)
+		Table->RotatePiece(true);
+
+	if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+		Table->RotatePiece(false);
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
