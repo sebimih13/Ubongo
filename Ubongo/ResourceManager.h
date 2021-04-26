@@ -1,7 +1,9 @@
 #pragma once
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
+#include <vector>
 #include <map>
 #include <string>
 
@@ -28,6 +30,10 @@ public:
 
 	// de-allocate all loaded resources
 	static void Clear();
+
+	// todo
+	static std::string PiecesFormat[15];
+	static glm::vec3 PiecesColor[15];
 
 private:
 	// resource storage
