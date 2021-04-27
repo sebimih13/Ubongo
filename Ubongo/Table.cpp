@@ -5,36 +5,31 @@ TableManager::TableManager()
 {
 	// mouse
 	MouseX = MouseY = MouseDiffX = MouseDiffY = 0;
-	SelectedPiece = 0;
 
 	// table 6x5
-	Table.resize(7, std::vector<int>(6, 0));
-
-	// todo : get data for block squares
-	Table[4][4] = -1;
+	TableRows = 6;
+	TableColumns = 5;
+	Table.resize(TableRows + 1, std::vector<int>(TableColumns + 1, 0));
 
 	TableUpX = 600;
 	TableUpY = 30;
 
-	TableRows = 6;
-	TableColumns = 5;
-
 	Resize = 0.5f;
-	SquareSize = ResourceManager::GetTexture("square").Width * Resize;
+	SquareSize = (int)(ResourceManager::GetTexture("square").Width * Resize);
 
 	// 4 moveable pieces
+	SelectedPiece = 0;
+
 	PiecePosition[1] = glm::vec2(210.0f, 490.0f);
 	PiecePosition[2] = glm::vec2(210.0f + 5.0f * SquareSize, 490.0f);
 	PiecePosition[3] = glm::vec2(210.0f, 490.0f + 3 * SquareSize + 10.0f);
 	PiecePosition[4] = glm::vec2(210.0f + 5.0f * SquareSize, 490.0f + 3 * SquareSize + 10.0f);
 
-	//  todo : get data for the 4 moveable pieces
 	MoveablePieces[1] = 1;
-	MoveablePieces[2] = 10;
-	MoveablePieces[3] = 11;
-	MoveablePieces[4] = 12;
+	MoveablePieces[2] = 1;
+	MoveablePieces[3] = 1;
+	MoveablePieces[4] = 1;
 
-	// todo : make function to set this vector
 	PieceFormat[1] = ResourceManager::PiecesFormat[MoveablePieces[1]];
 	PieceFormat[2] = ResourceManager::PiecesFormat[MoveablePieces[2]];
 	PieceFormat[3] = ResourceManager::PiecesFormat[MoveablePieces[3]];
@@ -178,6 +173,9 @@ void TableManager::RotatePiece(bool right)
 	if (SelectedPiece == 0)
 		return;
 
+	// todo : rotate
+	std::cout << "ROTATE " << (right ? "RIGHT" : "LEFT") << '\n';
+
 	/*
 	
 		****		###*		####		**##
@@ -268,6 +266,9 @@ void TableManager::FlipPiece()
 	if (SelectedPiece == 0)
 		return;
 
+	// todo : flip
+	std::cout << "FLIP\n";
+
 	/*
 
 		**##		#**#		####
@@ -276,9 +277,6 @@ void TableManager::FlipPiece()
 		####		####		**##
 
 	*/
-
-	// todo : flip
-	std::cout << "FLIP\n";
 
 	// todo : debug
 	for (int i = 0; i < 4; i++)
@@ -379,8 +377,8 @@ void TableManager::PutInTable()
 	DeletePieceFromTable(MoveablePieces[SelectedPiece]);
 
 	// todo : identify which square is closer to out position X && Y
-	// check if the selected piece must be placed in table
 
+	// check if the selected piece must be placed in table
 	glm::vec2 CorrectPosition = PiecePosition[SelectedPiece];
 	for (int i = 0; i < 4; i++)
 	{
@@ -450,5 +448,32 @@ void TableManager::SetMousePos(int x, int y)
 		PiecePosition[SelectedPiece].x += MouseDiffX;
 		PiecePosition[SelectedPiece].y += MouseDiffY;
 	}
+}
+
+bool TableManager::IsSolutionValid()
+{
+	for (int i = 1; i <= TableRows; i++)
+		for (int j = 1; j <= TableColumns; j++)
+			if (Table[i][j] == 0)
+				return false;
+	return true;
+}
+
+void TableManager::SetPieces(std::vector<int>& v)
+{
+	MoveablePieces[1] = v[1];
+	MoveablePieces[2] = v[2];
+	MoveablePieces[3] = v[3];
+	MoveablePieces[4] = v[4];
+
+	PieceFormat[1] = ResourceManager::PiecesFormat[MoveablePieces[1]];
+	PieceFormat[2] = ResourceManager::PiecesFormat[MoveablePieces[2]];
+	PieceFormat[3] = ResourceManager::PiecesFormat[MoveablePieces[3]];
+	PieceFormat[4] = ResourceManager::PiecesFormat[MoveablePieces[4]];
+}
+
+void TableManager::SetBlocks(int row, int column)
+{
+	Table[row][column] = -1;
 }
 

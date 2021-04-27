@@ -6,6 +6,9 @@ InfoPanel::InfoPanel()
 	// configure sprite renderer
 	RenderSprite = new SpriteRenderer(ResourceManager::GetShader("sprite"));
 
+	// diff between pieces
+	DiffX = 60.0f, DiffY = 70.0f;
+
 	// todo : make info for Game[][]
 	Game[1].push_back(1);
 	Game[1].push_back(2);
@@ -59,10 +62,7 @@ void InfoPanel::Draw()
 	RenderSprite->DrawSprite(ResourceManager::GetTexture("panel"), glm::vec2(30.0f, 30.0f));
 
 	// draw panel's pieces	
-	// todo : make const diffx, diffy
 	float StartX = 130.0f, StartY = 65.0f;
-	float DiffX = 60.0f, DiffY = 70.0f;
-
 	for (int i = 1; i <= 6; i++)
 	{
 		for (int j = 0; j < 4; j++)

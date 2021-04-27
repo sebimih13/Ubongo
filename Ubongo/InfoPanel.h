@@ -23,5 +23,7 @@ private:
 
 	SpriteRenderer* RenderSprite;
 	void DrawPiece(int index, glm::vec2 position);
+
+	float DiffX, DiffY;
 };
 

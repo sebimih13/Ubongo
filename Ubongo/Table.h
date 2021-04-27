@@ -26,11 +26,16 @@ public:
 
 	void Draw();
 
+	void SetBlocks(int row, int column);
+	void SetPieces(std::vector<int>& v);
+
 	void SetMouseLeft(bool pressed);
 	void SetMousePos(int x, int y);
 
 	void RotatePiece(bool right);
 	void FlipPiece();
+
+	bool IsSolutionValid();
 
 private:
 	// Render data

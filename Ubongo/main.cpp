@@ -194,9 +194,6 @@ void Init()
 
 void processInput(GLFWwindow* window)
 {
-	// todo
-	// std::cout << MouseX << ' ' << MouseY << '\n';
-
 	glfwGetCursorPos(window, &MouseX, &MouseY);
 	Table->SetMousePos((int)MouseX, (int)MouseY);
 }
