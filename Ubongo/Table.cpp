@@ -270,22 +270,62 @@ void TableManager::FlipPiece()
 
 	/*
 
-		****		####
-		###*	=>	###*
-		####		****	
-		####		####
-
-		**##		#**#
-		#*##	=>	#*##
-		#**#		**##
-		####		####
+		**##		#**#		####
+		#*##	=>	#*##	=>	#**#
+		#**#		**##		#*##
+		####		####		**##
 
 	*/
 
 	// todo : flip
 	std::cout << "FLIP\n";
 
+	// todo : debug
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			std::cout << PieceFormat[SelectedPiece][4 * i + j];
+		}
+		std::cout << '\n';
+	}
+	std::cout << '\n';
 
+	for (int iStart = 0, iEnd = 3; iStart < 2; iStart++, iEnd--)
+		for (int j = 0; j < 4; j++)
+			std::swap(PieceFormat[SelectedPiece][4 * iStart + j], PieceFormat[SelectedPiece][4 * iEnd + j]);
+
+	// correct position
+	int MinRow = 4, MinColumn = 4;
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (PieceFormat[SelectedPiece][4 * i + j] == '*')
+			{
+				MinRow = std::min(MinRow, i);
+				MinColumn = std::min(MinColumn, j);
+			}
+		}
+	}
+
+	for (int i = 0, ia = MinRow; i < 4; i++, ia++)
+		for (int j = 0, ja = MinColumn; j < 4; j++, ja++)
+			if (ia > 3 || ja > 3)
+				PieceFormat[SelectedPiece][4 * i + j] = '#';
+			else
+				PieceFormat[SelectedPiece][4 * i + j] = PieceFormat[SelectedPiece][4 * ia + ja];
+
+	// todo : debug
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			std::cout << PieceFormat[SelectedPiece][4 * i + j];
+		}
+		std::cout << '\n';
+	}
+	std::cout << '\n';
 }
 
 bool TableManager::IsPieceSelected(int index)
