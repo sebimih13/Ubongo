@@ -29,7 +29,7 @@ TableManager::TableManager()
 	PiecePosition[4] = glm::vec2(210.0f + 5.0f * SquareSize, 490.0f + 3 * SquareSize + 10.0f);
 
 	//  todo : get data for the 4 moveable pieces
-	MoveablePieces[1] = 9;
+	MoveablePieces[1] = 1;
 	MoveablePieces[2] = 10;
 	MoveablePieces[3] = 11;
 	MoveablePieces[4] = 12;
@@ -175,6 +175,9 @@ void TableManager::Draw()
 
 void TableManager::RotatePiece(bool right)
 {
+	if (SelectedPiece == 0)
+		return;
+
 	/*
 	
 		****		###*		####		**##
@@ -190,27 +193,25 @@ void TableManager::RotatePiece(bool right)
 
 	*/
 
-	// todo : BUG : DrawPiece()+
-
-	if (SelectedPiece != 0)
-	{
-		char aux[5][5];
-
-		for (int i = 0; i < 4; i++)
-			for (int j = 0; j < 4; j++)
-				aux[i][j] = PieceFormat[SelectedPiece][4 * i + j];
+	char aux[5][5];
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			aux[i][j] = PieceFormat[SelectedPiece][4 * i + j];
 		
-		// todo : debug output Piece Format
-		for (int i = 0; i < 4; i++)
+	// todo : debug output Piece Format
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
 		{
-			for (int j = 0; j < 4; j++)
-			{
-				std::cout << aux[i][j];
-			}
-			std::cout << '\n';
+			std::cout << aux[i][j];
 		}
 		std::cout << '\n';
+	}
+	std::cout << '\n';
 
+	int index = 0;
+	if (right)
+	{
 		// search max row which contains '*'
 		int StartRow = 4;
 		for (int i = 3; i >= 0 && StartRow == 4; i--)
@@ -218,47 +219,72 @@ void TableManager::RotatePiece(bool right)
 				if (aux[i][j] == '*')
 					StartRow = i;
 
-		int index = 0;
-		if (right)
+		for (int j = 0; j < 4; j++)
 		{
-			for (int j = 0; j < 4; j++)
-			{
-				for (int i = StartRow; i >= 0; i--)
-					PieceFormat[SelectedPiece][index++] = aux[i][j];
+			for (int i = StartRow; i >= 0; i--)
+				PieceFormat[SelectedPiece][index++] = aux[i][j];
 
-				// fill remaining spaces
-				while (index < (j + 1) * 4)
-					PieceFormat[SelectedPiece][index++] = '#';
-			}
+			// fill remaining spaces
+			while (index < (j + 1) * 4)
+				PieceFormat[SelectedPiece][index++] = '#';
 		}
-		else
-		{
-			for (int j = 3; j >= 0; j--)
-			{
-				for (int i = StartRow; i >= 0; i--)
-					PieceFormat[SelectedPiece][index++] = aux[i][j];
+	}
+	else
+	{
+		// search max row which contains '*'
+		int StartRow = 4;
+		for (int i = 0; i < 4 && StartRow == 4; i++)
+			for (int j = 0; j < 4 && StartRow == 4; j++)
+				if (aux[i][j] == '*')
+					StartRow = i;
 
-				// fill remaining spaces
-				while (index < (j + 1) * 4)
-					PieceFormat[SelectedPiece][index++] = '#';
-			}
+		std::cout << StartRow << '\n';
+
+		for (int j = 3; j >= 0; j--)
+		{
+			for (int i = StartRow; i < 4; i++)
+				PieceFormat[SelectedPiece][index++] = aux[i][j];
+
+			// fill remaining spaces
+			while (index == 0 || index % 4 != 0)
+				PieceFormat[SelectedPiece][index++] = '#';
 		}
+	}
 
-		// todo : debug output Piece Format
-		for (int i = 0; i < 4; i++)
+	// todo : debug output Piece Format
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
 		{
-			for (int j = 0; j < 4; j++)
-			{
-				std::cout << PieceFormat[SelectedPiece][4 * i + j];
-			}
-			std::cout << '\n';
+			std::cout << PieceFormat[SelectedPiece][4 * i + j];
 		}
 		std::cout << '\n';
 	}
+	std::cout << '\n';
 }
 
 void TableManager::FlipPiece()
 {
+	if (SelectedPiece == 0)
+		return;
+
+	/*
+
+		****		####
+		###*	=>	###*
+		####		****	
+		####		####
+
+		**##		#**#
+		#*##	=>	#*##
+		#**#		**##
+		####		####
+
+	*/
+
+	// todo : flip
+	std::cout << "FLIP\n";
+
 
 }
 

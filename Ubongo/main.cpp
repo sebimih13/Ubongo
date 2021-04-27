@@ -137,6 +137,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	if (key == GLFW_KEY_Q && action == GLFW_PRESS)
 		Table->RotatePiece(false);
+
+	if (key == GLFW_KEY_F && action == GLFW_PRESS)
+		Table->FlipPiece();
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
