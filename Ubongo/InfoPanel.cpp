@@ -1,49 +1,34 @@
 #include "InfoPanel.h"
 #include "ResourceManager.h"
 
-InfoPanel::InfoPanel()
+InfoPanel::InfoPanel(TableManager* Table)
 {
 	// configure sprite renderer
 	RenderSprite = new SpriteRenderer(ResourceManager::GetShader("sprite"));
 
+	// configure table
+	this->Table = Table;
+
 	// diff between pieces
 	DiffX = 60.0f, DiffY = 70.0f;
 
-	// todo : make info for Game[][]
-	Game[1].push_back(1);
-	Game[1].push_back(2);
-	Game[1].push_back(3);
-	Game[1].push_back(4);
+	// configure panel boxes
+	BoxInfo[0] = 40;
+	BoxInfo[1] = 125;
+	BoxInfo[2] = 200;
+	BoxInfo[3] = 255;
+	BoxInfo[4] = 330;
+	BoxInfo[5] = 390;
+	BoxInfo[6] = 460;
 
-	Game[2].push_back(5);
-	Game[2].push_back(6);
-	Game[2].push_back(7);
-	Game[2].push_back(8);
-
-	Game[3].push_back(9);
-	Game[3].push_back(10);
-	Game[3].push_back(11);
-	Game[3].push_back(12);
-
-	Game[4].push_back(12);
-	Game[4].push_back(12);
-	Game[4].push_back(12);
-	Game[4].push_back(12);
-
-	Game[5].push_back(10);
-	Game[5].push_back(11);
-	Game[5].push_back(2);
-	Game[5].push_back(4);
-
-	Game[6].push_back(5);
-	Game[6].push_back(5);
-	Game[6].push_back(5);
-	Game[6].push_back(5);
+	// prepare each set
+	for (int i = 1; i <= 6; i++)
+		Game[i].resize(5, 0);
 }
 
 void InfoPanel::DrawPiece(int index, glm::vec2 position)
 {
-	int SquareSize = ResourceManager::GetTexture("square").Width * 0.1f;
+	int SquareSize = (int)(ResourceManager::GetTexture("square").Width * 0.1f);
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -62,14 +47,44 @@ void InfoPanel::Draw()
 	RenderSprite->DrawSprite(ResourceManager::GetTexture("panel"), glm::vec2(30.0f, 30.0f));
 
 	// draw panel's pieces	
-	float StartX = 130.0f, StartY = 65.0f;
+	float StartX = 80.0f, StartY = 65.0f;
 	for (int i = 1; i <= 6; i++)
 	{
-		for (int j = 0; j < 4; j++)
+		for (int j = 1; j <= 4; j++)
 		{
 			DrawPiece(Game[i][j], glm::vec2(StartX + j * DiffX, StartY));
 		}
 		StartY += DiffY;
+	}
+}
+
+void InfoPanel::SetPanelInfo(int set, int piece, int value)
+{
+	Game[set][piece] = value;
+	Table->SetPieces(Game[set]);
+}
+
+void InfoPanel::SetMouseLeft(bool pressed)
+{
+	if (pressed)
+		CheckBoxs();
+}
+
+void InfoPanel::SetMousePos(int x, int y)
+{
+	MouseX = x;
+	MouseY = y;
+}
+
+void InfoPanel::CheckBoxs()
+{
+	for (int i = 1; i <= 6; i++)
+	{
+		if (40 <= MouseX && MouseX <= 110 && BoxInfo[i - 1] <= MouseY && MouseY <= BoxInfo[i])
+		{
+			Table->ClearTable();
+			Table->SetPieces(Game[i]);
+		}
 	}
 }
 

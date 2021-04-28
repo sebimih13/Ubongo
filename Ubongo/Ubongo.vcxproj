@@ -84,8 +84,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="InfoPanel.cpp" />
+    <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -96,7 +98,9 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="InfoPanel.h" />
+    <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SpriteRenderer.h" />
@@ -106,6 +110,15 @@
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="levels\1.lvl" />
+    <None Include="levels\2.lvl" />
+    <None Include="levels\3.lvl" />
+    <None Include="levels\4.lvl" />
+    <None Include="levels\5.lvl" />
+    <None Include="levels\6.lvl" />
+    <None Include="levels\7.lvl" />
+    <None Include="levels\8.lvl" />
+    <None Include="levels\9.lvl" />
     <None Include="shaders\line.frag" />
     <None Include="shaders\line.vert" />
     <None Include="shaders\sprite.frag" />

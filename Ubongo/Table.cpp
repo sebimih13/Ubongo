@@ -9,7 +9,7 @@ TableManager::TableManager()
 	// table 6x5
 	TableRows = 6;
 	TableColumns = 5;
-	Table.resize(TableRows + 1, std::vector<int>(TableColumns + 1, 0));
+	Table.resize(TableRows + 2, std::vector<int>(TableColumns + 2, 0));
 
 	TableUpX = 600;
 	TableUpY = 30;
@@ -20,20 +20,23 @@ TableManager::TableManager()
 	// 4 moveable pieces
 	SelectedPiece = 0;
 
-	PiecePosition[1] = glm::vec2(210.0f, 490.0f);
-	PiecePosition[2] = glm::vec2(210.0f + 5.0f * SquareSize, 490.0f);
-	PiecePosition[3] = glm::vec2(210.0f, 490.0f + 3 * SquareSize + 10.0f);
-	PiecePosition[4] = glm::vec2(210.0f + 5.0f * SquareSize, 490.0f + 3 * SquareSize + 10.0f);
+	PiecePosition[1] = glm::vec2(610.0f, 490.0f);
+	PiecePosition[2] = glm::vec2(610.0f + 5.0f * SquareSize, 490.0f);
+	PiecePosition[3] = glm::vec2(610.0f, 490.0f + 3 * SquareSize + 10.0f);
+	PiecePosition[4] = glm::vec2(610.0f + 5.0f * SquareSize, 490.0f + 3 * SquareSize + 10.0f);
 
 	MoveablePieces[1] = 1;
-	MoveablePieces[2] = 1;
-	MoveablePieces[3] = 1;
-	MoveablePieces[4] = 1;
+	MoveablePieces[2] = 2;
+	MoveablePieces[3] = 3;
+	MoveablePieces[4] = 4;
 
 	PieceFormat[1] = ResourceManager::PiecesFormat[MoveablePieces[1]];
 	PieceFormat[2] = ResourceManager::PiecesFormat[MoveablePieces[2]];
 	PieceFormat[3] = ResourceManager::PiecesFormat[MoveablePieces[3]];
 	PieceFormat[4] = ResourceManager::PiecesFormat[MoveablePieces[4]];
+
+	// configure sprite renderer
+	RenderSprite = new SpriteRenderer(ResourceManager::GetShader("sprite"));
 
 	InitRenderData();
 }
@@ -86,10 +89,6 @@ void TableManager::InitRenderData()
 	glBindVertexArray(0);
 
 	glDeleteBuffers(1, &LineVBO);
-
-
-	// configure sprite renderer
-	RenderSprite = new SpriteRenderer(ResourceManager::GetShader("sprite"));
 }
 
 void TableManager::DrawPiece(int index)
@@ -118,6 +117,7 @@ void TableManager::Draw()
 			else if (value == -1)
 			{
 				ResourceManager::GetShader("line").Use();
+				ResourceManager::GetShader("line").SetVector3f("color", glm::vec3(0.9f, 0.9f, 0.9f));
 				glBindVertexArray(SquareVAO);
 
 				model = glm::mat4(1.0f);
@@ -133,6 +133,7 @@ void TableManager::Draw()
 
 	// draw rows and columns
 	ResourceManager::GetShader("line").Use();
+	ResourceManager::GetShader("line").SetVector3f("color", glm::vec3(0.9f, 0.9f, 0.9f));
 
 	glBindVertexArray(LineVAO);
 	glLineWidth(2.0f);
@@ -235,8 +236,6 @@ void TableManager::RotatePiece(bool right)
 			for (int j = 0; j < 4 && StartRow == 4; j++)
 				if (aux[i][j] == '*')
 					StartRow = i;
-
-		std::cout << StartRow << '\n';
 
 		for (int j = 3; j >= 0; j--)
 		{
@@ -398,6 +397,8 @@ void TableManager::PutInTable()
 				{
 					int Row = (EndY - TableUpY) / SquareSize;
 					int Column = (EndX - TableUpX) / SquareSize;
+
+					std::cout << Row << ' ' << Column << '\n';
 					
 					// check if place is already taken
 					if (Table[Row][Column] != 0)
@@ -470,10 +471,30 @@ void TableManager::SetPieces(std::vector<int>& v)
 	PieceFormat[2] = ResourceManager::PiecesFormat[MoveablePieces[2]];
 	PieceFormat[3] = ResourceManager::PiecesFormat[MoveablePieces[3]];
 	PieceFormat[4] = ResourceManager::PiecesFormat[MoveablePieces[4]];
+
+	PiecePosition[1] = glm::vec2(610.0f, 490.0f);
+	PiecePosition[2] = glm::vec2(610.0f + 5.0f * SquareSize, 490.0f);
+	PiecePosition[3] = glm::vec2(610.0f, 490.0f + 3 * SquareSize + 10.0f);
+	PiecePosition[4] = glm::vec2(610.0f + 5.0f * SquareSize, 490.0f + 3 * SquareSize + 10.0f);
 }
 
 void TableManager::SetBlocks(int row, int column)
 {
 	Table[row][column] = -1;
+}
+
+void TableManager::ClearBlocks()
+{
+	for (int i = 1; i <= TableRows; i++)
+		for (int j = 1; j <= TableColumns; j++)
+			Table[i][j] = 0;
+}	
+
+void TableManager::ClearTable()
+{
+	for (int i = 1; i <= TableRows; i++)
+		for (int j = 1; j <= TableColumns; j++)
+			if (Table[i][j] > 0)
+				Table[i][j] = 0;
 }
 

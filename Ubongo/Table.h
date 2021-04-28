@@ -26,6 +26,9 @@ public:
 
 	void Draw();
 
+	void ClearBlocks();
+	void ClearTable();
+
 	void SetBlocks(int row, int column);
 	void SetPieces(std::vector<int>& v);
 
@@ -62,7 +65,6 @@ private:
 	std::string PieceFormat[5];
 
 	void DrawPiece(int index);
-
 	void SetSelectedPiece();
 	bool IsPieceSelected(int index);
 	void DeletePieceFromTable(int index);

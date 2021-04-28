@@ -11,8 +11,11 @@
 
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
+#include "TextRenderer.h"
 #include "InfoPanel.h"
 #include "Table.h"
+#include "LevelLoader.h"
+#include "Button.h"
 
 // Callback functions
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -21,7 +24,9 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 // Utility functions
 void Init();
-void processInput(GLFWwindow* window);
+void ProcessInput(GLFWwindow* window);
+void CheckSuccess();
+void DrawButtons();
 
 // Window settings
 const unsigned int SCR_WIDTH = 1200;
@@ -37,11 +42,21 @@ double MouseX, MouseY;
 // Table
 TableManager* Table;
 
-// Sprite Renderer
-SpriteRenderer* RenderSprite;
+// Text/Sprite Renderer
+TextRenderer* Text;
+SpriteRenderer* Sprite;
 
 // Panel
 InfoPanel* Panel;
+
+// Level Loader
+int CurrentLevel = 1;
+Level* LevelLoader;
+
+// Buttons
+Button* NextSceneButton;
+Button* PreviousSceneButton;
+Button* SolutionButton;
 
 int main()
 {
@@ -82,6 +97,9 @@ int main()
 	// initialize buffers and shaders
 	Init();
 
+	// load level
+	LevelLoader->Load(1);
+
 
 	// render loop
 	while (!glfwWindowShouldClose(window))
@@ -93,15 +111,17 @@ int main()
 
 
 		// input
-		processInput(window);
+		ProcessInput(window);
 
 
 		// rendering commands here
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		DrawButtons();
 		Table->Draw();
 		Panel->Draw();
+		CheckSuccess();
 
 
 		// check and call events and swap the buffers
@@ -110,8 +130,14 @@ int main()
 	}
 
 	delete Table;
-	delete RenderSprite;
 	delete Panel;
+	delete LevelLoader;
+	delete Text;
+	delete Sprite;
+
+	delete NextSceneButton;
+	delete PreviousSceneButton;
+	delete SolutionButton;
 
 	// glfw: terminate, clearing all previously allocated GLFW resources
 	glfwTerminate();
@@ -147,11 +173,19 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
 	{
 		Table->SetMouseLeft(true);
+		Panel->SetMouseLeft(true);
+		NextSceneButton->SetLeftMouse(true);
+		PreviousSceneButton->SetLeftMouse(true);
+		SolutionButton->SetLeftMouse(true);
 		std::cout << "Left Mouse PRESSED\n";
 	}
 	else
 	{
 		Table->SetMouseLeft(false);
+		Panel->SetMouseLeft(false);
+		NextSceneButton->SetLeftMouse(false);
+		PreviousSceneButton->SetLeftMouse(false);
+		SolutionButton->SetLeftMouse(false);
 		std::cout << "Left Mouse RELEASED\n";
 	}
 }
@@ -179,22 +213,75 @@ void Init()
 	// load textures
 	ResourceManager::LoadTexture("assets/panel.png", true, "panel");
 	ResourceManager::LoadTexture("assets/block.png", false, "square");
+	ResourceManager::LoadTexture("assets/next.png", true, "next");
 	
 
 	// configure resource manager
 	ResourceManager::ResourceManager();
 
-	// configure panel
-	Panel = new InfoPanel();
-
 	// configure table
 	Table = new TableManager();
 
+	// configure panel
+	Panel = new InfoPanel(Table);
+
+	// configure level
+	LevelLoader = new Level(Panel, Table);
+
+	// configure text/sprite renderer
+	Text = new TextRenderer(SCR_WIDTH, SCR_HEIGHT);
+	Text->Load("fonts/Antonio-Bold.ttf", 60);
+
+	Sprite = new SpriteRenderer(ResourceManager::GetShader("sprite"));
+	
+	// buttons
+	int TextureSize = ResourceManager::GetTexture("next").Width;
+	NextSceneButton = new Button(glm::vec2(250.0f, 600.0f), glm::vec2(TextureSize - 10.0f, TextureSize - 10.0f), glm::vec3(1.0f));
+	PreviousSceneButton = new Button(glm::vec2(50.0f, 600.0f), glm::vec2(TextureSize - 10.0f, TextureSize - 10.0f), glm::vec3(1.0f));
+	SolutionButton = new Button(glm::vec2(50.0f, 550.0f), glm::vec2(400.0f, 70.0f), glm::vec3(0.5f, 0.5f, 0.5f));
 }
 
-void processInput(GLFWwindow* window)
+void ProcessInput(GLFWwindow* window)
 {
 	glfwGetCursorPos(window, &MouseX, &MouseY);
 	Table->SetMousePos((int)MouseX, (int)MouseY);
+	Panel->SetMousePos((int)MouseX, (int)MouseY);
+	NextSceneButton->ProcessInput((int)MouseX, (int)MouseY);
+	PreviousSceneButton->ProcessInput((int)MouseX, (int)MouseY);
+	SolutionButton->ProcessInput((int)MouseX, (int)MouseY);
+}
+
+void CheckSuccess()
+{
+	if (Table->IsSolutionValid())
+		Text->RenderText("Success", SCR_WIDTH / 2, SCR_HEIGHT / 2, 1.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+void DrawButtons()
+{
+	NextSceneButton->RenderWithSprite(Sprite, 1.0f);
+	PreviousSceneButton->RenderWithSprite(Sprite, 180.0f);
+	SolutionButton->RenderWithText(Text, "Show Solution", glm::vec2(35.0f, 10.0f));
+
+	// todo
+	if (NextSceneButton->IsClicked())
+	{
+		CurrentLevel++;
+		if (CurrentLevel > 9)
+			CurrentLevel = 1;
+		LevelLoader->Load(CurrentLevel);
+	}
+	else if (PreviousSceneButton->IsClicked())
+	{
+		CurrentLevel--;
+		if (CurrentLevel < 1)
+			CurrentLevel = 9;
+		LevelLoader->Load(CurrentLevel);
+	}
+
+	if (SolutionButton->IsClicked())
+	{
+
+	}
 }
 

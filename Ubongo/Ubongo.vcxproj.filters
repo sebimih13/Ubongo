@@ -45,6 +45,12 @@
     <ClCompile Include="Table.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LevelLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ResourceManager.h">
@@ -71,6 +77,12 @@
     <ClInclude Include="Table.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LevelLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\sprite.frag" />
@@ -79,5 +91,14 @@
     <None Include="shaders\text_2D.vert" />
     <None Include="shaders\line.frag" />
     <None Include="shaders\line.vert" />
+    <None Include="levels\1.lvl" />
+    <None Include="levels\2.lvl" />
+    <None Include="levels\3.lvl" />
+    <None Include="levels\4.lvl" />
+    <None Include="levels\5.lvl" />
+    <None Include="levels\6.lvl" />
+    <None Include="levels\7.lvl" />
+    <None Include="levels\8.lvl" />
+    <None Include="levels\9.lvl" />
   </ItemGroup>
 </Project>
