@@ -31,6 +31,7 @@ public:
 	// de-allocate all loaded resources
 	static void Clear();
 
+	// todo
 	static std::string PiecesFormat[15];
 	static glm::vec3 PiecesColor[15];
 

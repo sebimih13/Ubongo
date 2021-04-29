@@ -40,8 +40,6 @@ public:
 
 	bool IsSolutionValid();
 
-	void MakeSolution();
-
 private:
 	// Render data
 	GLuint LineVAO, SquareVAO;
@@ -70,10 +68,6 @@ private:
 	void SetSelectedPiece();
 	bool IsPieceSelected(int index);
 	void DeletePieceFromTable(int index);
-	bool PutInTable(bool manual);
-
-	// Solution
-	bool FoundSolution;
-	void bkt(int PieceToPlace);
+	void PutInTable();
 };
 
