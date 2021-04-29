@@ -58,6 +58,8 @@ Button* NextSceneButton;
 Button* PreviousSceneButton;
 Button* SolutionButton;
 
+bool SearchingSolution = false;
+
 int main()
 {
 	// glfw: initialize and configure
@@ -236,8 +238,8 @@ void Init()
 	
 	// buttons
 	int TextureSize = ResourceManager::GetTexture("next").Width;
-	NextSceneButton = new Button(glm::vec2(250.0f, 600.0f), glm::vec2(TextureSize - 10.0f, TextureSize - 10.0f), glm::vec3(1.0f));
-	PreviousSceneButton = new Button(glm::vec2(50.0f, 600.0f), glm::vec2(TextureSize - 10.0f, TextureSize - 10.0f), glm::vec3(1.0f));
+	NextSceneButton = new Button(glm::vec2(250.0f, 650.0f), glm::vec2(TextureSize - 10.0f, TextureSize - 10.0f), glm::vec3(1.0f));
+	PreviousSceneButton = new Button(glm::vec2(50.0f, 650.0f), glm::vec2(TextureSize - 10.0f, TextureSize - 10.0f), glm::vec3(1.0f));
 	SolutionButton = new Button(glm::vec2(50.0f, 550.0f), glm::vec2(400.0f, 70.0f), glm::vec3(0.5f, 0.5f, 0.5f));
 }
 
@@ -263,15 +265,14 @@ void DrawButtons()
 	PreviousSceneButton->RenderWithSprite(Sprite, 180.0f);
 	SolutionButton->RenderWithText(Text, "Show Solution", glm::vec2(35.0f, 10.0f));
 
-	// todo
-	if (NextSceneButton->IsClicked())
+	if (NextSceneButton->IsClicked() && !SearchingSolution)
 	{
 		CurrentLevel++;
 		if (CurrentLevel > 9)
 			CurrentLevel = 1;
 		LevelLoader->Load(CurrentLevel);
 	}
-	else if (PreviousSceneButton->IsClicked())
+	else if (PreviousSceneButton->IsClicked() && !SearchingSolution)
 	{
 		CurrentLevel--;
 		if (CurrentLevel < 1)
@@ -281,7 +282,9 @@ void DrawButtons()
 
 	if (SolutionButton->IsClicked())
 	{
-
+		SearchingSolution = true;
+		Table->MakeSolution();
+		SearchingSolution = false;
 	}
 }
 

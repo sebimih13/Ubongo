@@ -3,6 +3,9 @@
 
 TableManager::TableManager()
 {
+	// solution
+	FoundSolution = false;
+
 	// mouse
 	MouseX = MouseY = MouseDiffX = MouseDiffY = 0;
 
@@ -174,9 +177,6 @@ void TableManager::RotatePiece(bool right)
 	if (SelectedPiece == 0)
 		return;
 
-	// todo : rotate
-	std::cout << "ROTATE " << (right ? "RIGHT" : "LEFT") << '\n';
-
 	/*
 	
 		****		###*		####		**##
@@ -196,17 +196,6 @@ void TableManager::RotatePiece(bool right)
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 			aux[i][j] = PieceFormat[SelectedPiece][4 * i + j];
-		
-	// todo : debug output Piece Format
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			std::cout << aux[i][j];
-		}
-		std::cout << '\n';
-	}
-	std::cout << '\n';
 
 	int index = 0;
 	if (right)
@@ -230,43 +219,27 @@ void TableManager::RotatePiece(bool right)
 	}
 	else
 	{
-		// search max row which contains '*'
-		int StartRow = 4;
-		for (int i = 0; i < 4 && StartRow == 4; i++)
-			for (int j = 0; j < 4 && StartRow == 4; j++)
+		// search max column which contains '*'
+		int StartColumn = 4;
+		for (int j = 3; j >= 0 && StartColumn == 4; j--)
+			for (int i = 0; i < 4 && StartColumn == 4; i++)
 				if (aux[i][j] == '*')
-					StartRow = i;
+					StartColumn = j;
 
-		for (int j = 3; j >= 0; j--)
-		{
-			for (int i = StartRow; i < 4; i++)
+		for (int j = StartColumn; j >= 0; j--)
+			for (int i = 0; i < 4; i++)
 				PieceFormat[SelectedPiece][index++] = aux[i][j];
 
-			// fill remaining spaces
-			while (index == 0 || index % 4 != 0)
-				PieceFormat[SelectedPiece][index++] = '#';
-		}
+		// fill remaining spaces
+		while (index < 16)
+			PieceFormat[SelectedPiece][index++] = '#';
 	}
-
-	// todo : debug output Piece Format
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			std::cout << PieceFormat[SelectedPiece][4 * i + j];
-		}
-		std::cout << '\n';
-	}
-	std::cout << '\n';
 }
 
 void TableManager::FlipPiece()
 {
 	if (SelectedPiece == 0)
 		return;
-
-	// todo : flip
-	std::cout << "FLIP\n";
 
 	/*
 
@@ -276,17 +249,6 @@ void TableManager::FlipPiece()
 		####		####		**##
 
 	*/
-
-	// todo : debug
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			std::cout << PieceFormat[SelectedPiece][4 * i + j];
-		}
-		std::cout << '\n';
-	}
-	std::cout << '\n';
 
 	for (int iStart = 0, iEnd = 3; iStart < 2; iStart++, iEnd--)
 		for (int j = 0; j < 4; j++)
@@ -312,17 +274,6 @@ void TableManager::FlipPiece()
 				PieceFormat[SelectedPiece][4 * i + j] = '#';
 			else
 				PieceFormat[SelectedPiece][4 * i + j] = PieceFormat[SelectedPiece][4 * ia + ja];
-
-	// todo : debug
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			std::cout << PieceFormat[SelectedPiece][4 * i + j];
-		}
-		std::cout << '\n';
-	}
-	std::cout << '\n';
 }
 
 bool TableManager::IsPieceSelected(int index)
@@ -368,14 +319,12 @@ void TableManager::DeletePieceFromTable(int index)
 				Table[i][j] = 0;
 }
 
-void TableManager::PutInTable()
+bool TableManager::PutInTable(bool manual)
 {
 	if (SelectedPiece == 0)
-		return;
+		return false;
 
 	DeletePieceFromTable(MoveablePieces[SelectedPiece]);
-
-	// todo : identify which square is closer to out position X && Y
 
 	// check if the selected piece must be placed in table
 	glm::vec2 CorrectPosition = PiecePosition[SelectedPiece];
@@ -392,19 +341,17 @@ void TableManager::PutInTable()
 				int EndY = StartY + SquareSize;
 
 				// check if piece is in table
-				if (TableUpX <= StartX && EndX <= TableUpX + (TableColumns + 1) * SquareSize
-					&& TableUpY <= StartY && EndY <= TableUpY + (TableRows + 1) * SquareSize)
+				if (TableUpX <= StartX && EndX <= TableUpX + (TableColumns + (int)manual) * SquareSize
+					&& TableUpY <= StartY && EndY <= TableUpY + (TableRows + (int)manual) * SquareSize)
 				{
 					int Row = (EndY - TableUpY) / SquareSize;
 					int Column = (EndX - TableUpX) / SquareSize;
-
-					std::cout << Row << ' ' << Column << '\n';
 					
 					// check if place is already taken
 					if (Table[Row][Column] != 0)
 					{
 						DeletePieceFromTable(MoveablePieces[SelectedPiece]);
-						return;
+						return false;
 					}
 
 					Table[Row][Column] = MoveablePieces[SelectedPiece];
@@ -413,13 +360,14 @@ void TableManager::PutInTable()
 				else // piece is outside of table
 				{
 					DeletePieceFromTable(MoveablePieces[SelectedPiece]);
-					return;
+					return false;
 				}
 			}
 		}
 	}
 
 	PiecePosition[SelectedPiece] = CorrectPosition;
+	return true;
 }
 
 void TableManager::SetMouseLeft(bool pressed)
@@ -430,7 +378,7 @@ void TableManager::SetMouseLeft(bool pressed)
 	}
 	else
 	{
-		PutInTable();
+		PutInTable(true);
 		SelectedPiece = 0;
 	}
 }
@@ -496,5 +444,54 @@ void TableManager::ClearTable()
 		for (int j = 1; j <= TableColumns; j++)
 			if (Table[i][j] > 0)
 				Table[i][j] = 0;
+}
+
+void TableManager::bkt(int PieceToPlace)
+{
+	if (PieceToPlace > 4)
+	{
+		FoundSolution = true;
+		return;
+	}
+
+	for (int i = 1; i <= TableRows; i++)
+	{
+		for (int j = 1; j <= TableColumns; j++)
+		{
+			for (int flip = 0; flip < 2; flip++)
+			{
+				for (int rot = 1; rot <= 4; rot++)
+				{
+					PiecePosition[PieceToPlace] = glm::vec2(TableUpX + (j - 1) * SquareSize, TableUpY + (i - 1) * SquareSize);
+
+					SelectedPiece = PieceToPlace;
+					if (PutInTable(false))
+						bkt(PieceToPlace + 1);
+
+					if (FoundSolution)
+						return;
+
+					DeletePieceFromTable(MoveablePieces[PieceToPlace]);
+
+					SelectedPiece = PieceToPlace;
+					RotatePiece(true);
+				}
+
+				// flip piece
+				SelectedPiece = PieceToPlace;
+				FlipPiece();
+			}
+		}
+	}
+}
+
+void TableManager::MakeSolution()
+{
+	DeletePieceFromTable(1);
+	DeletePieceFromTable(2);
+	DeletePieceFromTable(3);
+	DeletePieceFromTable(4);
+	FoundSolution = false;
+	bkt(1);
 }
 
