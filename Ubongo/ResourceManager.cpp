@@ -14,8 +14,6 @@ glm::vec3 ResourceManager::PiecesColor[15];
 
 ResourceManager::ResourceManager()
 {
-	std::cout << "Resource Manager constructor\n";
-
 	/*
 
 		Pieces format: 4x4

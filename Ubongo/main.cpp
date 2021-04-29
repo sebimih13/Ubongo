@@ -179,7 +179,6 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 		NextSceneButton->SetLeftMouse(true);
 		PreviousSceneButton->SetLeftMouse(true);
 		SolutionButton->SetLeftMouse(true);
-		std::cout << "Left Mouse PRESSED\n";
 	}
 	else
 	{
@@ -188,7 +187,6 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 		NextSceneButton->SetLeftMouse(false);
 		PreviousSceneButton->SetLeftMouse(false);
 		SolutionButton->SetLeftMouse(false);
-		std::cout << "Left Mouse RELEASED\n";
 	}
 }
 
@@ -265,7 +263,6 @@ void DrawButtons()
 	PreviousSceneButton->RenderWithSprite(Sprite, 180.0f);
 	SolutionButton->RenderWithText(Text, "Show Solution", glm::vec2(35.0f, 10.0f));
 
-	// todo
 	if (NextSceneButton->IsClicked() && !SearchingSolution)
 	{
 		CurrentLevel++;

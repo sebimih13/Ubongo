@@ -71,6 +71,7 @@ private:
 	bool IsPieceSelected(int index);
 	void DeletePieceFromTable(int index);
 	bool PutInTable(bool manual);
+	void CorrectMatrix();
 
 	// Solution
 	bool FoundSolution;

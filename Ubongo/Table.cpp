@@ -172,88 +172,8 @@ void TableManager::Draw()
 		DrawPiece(i);
 }
 
-void TableManager::RotatePiece(bool right)
+void TableManager::CorrectMatrix()
 {
-	if (SelectedPiece == 0)
-		return;
-
-	/*
-	
-		****		###*		####		**##
-		###*	=>	###*	=>	####	=>	*###
-		####		###*		*###		*###
-		####		##**		****		*###
-
-
-		****		#*##		####		**##
-		###*	=>	#*##	=>	####	=>	*###
-		####		#*##		*###		*###
-		####		**##		****		*###
-
-	*/
-
-	char aux[5][5];
-	for (int i = 0; i < 4; i++)
-		for (int j = 0; j < 4; j++)
-			aux[i][j] = PieceFormat[SelectedPiece][4 * i + j];
-
-	int index = 0;
-	if (right)
-	{
-		// search max row which contains '*'
-		int StartRow = 4;
-		for (int i = 3; i >= 0 && StartRow == 4; i--)
-			for (int j = 0; j < 4 && StartRow == 4; j++)
-				if (aux[i][j] == '*')
-					StartRow = i;
-
-		for (int j = 0; j < 4; j++)
-		{
-			for (int i = StartRow; i >= 0; i--)
-				PieceFormat[SelectedPiece][index++] = aux[i][j];
-
-			// fill remaining spaces
-			while (index < (j + 1) * 4)
-				PieceFormat[SelectedPiece][index++] = '#';
-		}
-	}
-	else
-	{
-		// search max column which contains '*'
-		int StartColumn = 4;
-		for (int j = 3; j >= 0 && StartColumn == 4; j--)
-			for (int i = 0; i < 4 && StartColumn == 4; i++)
-				if (aux[i][j] == '*')
-					StartColumn = j;
-
-		for (int j = StartColumn; j >= 0; j--)
-			for (int i = 0; i < 4; i++)
-				PieceFormat[SelectedPiece][index++] = aux[i][j];
-
-		// fill remaining spaces
-		while (index < 16)
-			PieceFormat[SelectedPiece][index++] = '#';
-	}
-}
-
-void TableManager::FlipPiece()
-{
-	if (SelectedPiece == 0)
-		return;
-
-	/*
-
-		**##		#**#		####
-		#*##	=>	#*##	=>	#**#
-		#**#		**##		#*##
-		####		####		**##
-
-	*/
-
-	for (int iStart = 0, iEnd = 3; iStart < 2; iStart++, iEnd--)
-		for (int j = 0; j < 4; j++)
-			std::swap(PieceFormat[SelectedPiece][4 * iStart + j], PieceFormat[SelectedPiece][4 * iEnd + j]);
-
 	// correct position
 	int MinRow = 4, MinColumn = 4;
 	for (int i = 0; i < 4; i++)
@@ -274,6 +194,45 @@ void TableManager::FlipPiece()
 				PieceFormat[SelectedPiece][4 * i + j] = '#';
 			else
 				PieceFormat[SelectedPiece][4 * i + j] = PieceFormat[SelectedPiece][4 * ia + ja];
+}
+
+void TableManager::RotatePiece(bool right)
+{
+	if (SelectedPiece == 0)
+		return;
+
+	char aux[5][5];
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			aux[i][j] = PieceFormat[SelectedPiece][4 * i + j];
+
+	int index = 0;
+	if (right)
+	{
+		for (int j = 0; j < 4; j++)
+			for (int i = 3; i >= 0; i--)
+				PieceFormat[SelectedPiece][index++] = aux[i][j];
+	}
+	else
+	{
+		for (int j = 3; j >= 0; j--)
+			for (int i = 0; i < 4; i++)
+				PieceFormat[SelectedPiece][index++] = aux[i][j];
+	}
+
+	CorrectMatrix();
+}
+
+void TableManager::FlipPiece()
+{
+	if (SelectedPiece == 0)
+		return;
+
+	for (int iStart = 0, iEnd = 3; iStart < 2; iStart++, iEnd--)
+		for (int j = 0; j < 4; j++)
+			std::swap(PieceFormat[SelectedPiece][4 * iStart + j], PieceFormat[SelectedPiece][4 * iEnd + j]);
+
+	CorrectMatrix();
 }
 
 bool TableManager::IsPieceSelected(int index)
