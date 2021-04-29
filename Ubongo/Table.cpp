@@ -247,7 +247,7 @@ void TableManager::RotatePiece(bool right)
 				PieceFormat[SelectedPiece][index++] = '#';
 		}
 	}
-
+	 
 	// todo : debug output Piece Format
 	for (int i = 0; i < 4; i++)
 	{
