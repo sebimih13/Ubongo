@@ -27,6 +27,7 @@ void Init();
 void ProcessInput(GLFWwindow* window);
 void CheckSuccess();
 void DrawButtons();
+void DrawLevelInformation();
 
 // Window settings
 const unsigned int SCR_WIDTH = 1200;
@@ -120,6 +121,7 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		DrawLevelInformation();
 		DrawButtons();
 		Table->Draw();
 		Panel->Draw();
@@ -284,5 +286,10 @@ void DrawButtons()
 		Table->MakeSolution();
 		SearchingSolution = false;
 	}
+}
+
+void DrawLevelInformation()
+{
+	Text->RenderText("Level " + std::to_string(CurrentLevel), (float)SCR_WIDTH - 230.0f, 50.0f, 1.0f, glm::vec3(0.0f, 0.8f, 1.0f));
 }
 

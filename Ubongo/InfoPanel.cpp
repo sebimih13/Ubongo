@@ -67,7 +67,7 @@ void InfoPanel::SetPanelInfo(int set, int piece, int value)
 void InfoPanel::SetMouseLeft(bool pressed)
 {
 	if (pressed)
-		CheckBoxs();
+		CheckBoxes();
 }
 
 void InfoPanel::SetMousePos(int x, int y)
@@ -76,7 +76,7 @@ void InfoPanel::SetMousePos(int x, int y)
 	MouseY = y;
 }
 
-void InfoPanel::CheckBoxs()
+void InfoPanel::CheckBoxes()
 {
 	for (int i = 1; i <= 6; i++)
 	{

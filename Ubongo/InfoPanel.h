@@ -36,7 +36,7 @@ private:
 	std::vector<int> Game[7];
 
 	// check panel box
-	void CheckBoxs();
+	void CheckBoxes();
 	int BoxInfo[7];
 
 	// diff between pieces
