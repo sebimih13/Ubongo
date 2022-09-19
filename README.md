@@ -24,5 +24,8 @@
 
 Input  | Description
 --------------------------------------------------------------------------------------------------- | -------------
-<img src="https://github.com/sebimih13/Cellular-Automata/blob/main/Resource/Mouse_Left_Key.png">    | Left click
+<img src="https://github.com/sebimih13/Ubongo/blob/main/Resource/Mouse_Left_Key.png">     | Left click
+<img src="https://github.com/sebimih13/Ubongo/blob/main/Resource/Q_Key.png">              | Q
+<img src="https://github.com/sebimih13/Ubongo/blob/main/Resource/E_Key.png">              | E
+<img src="https://github.com/sebimih13/Ubongo/blob/main/Resource/F_Key.png">              | F
 
